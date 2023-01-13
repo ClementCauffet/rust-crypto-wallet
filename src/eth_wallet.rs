@@ -13,6 +13,7 @@ pub fn generate_keypair() -> (SecretKey, PublicKey) {
     secp.generate_keypair(&mut rng)
 }
 
+//derivating public adress from public key
 pub fn public_key_address(public_key: &PublicKey) -> Address {
     let public_key = public_key.serialize_uncompressed();
 
