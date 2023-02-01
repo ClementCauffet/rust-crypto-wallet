@@ -15,4 +15,6 @@ cd rust-crypto-wallet
 cargo run
 ```
 
+TEST
+
 **_!! This repository is still in progress. Do not use non-audited code for professionnal applications !!_**
