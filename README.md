@@ -15,6 +15,4 @@ cd rust-crypto-wallet
 cargo run
 ```
 
-**[KEYS currently not randomly generated]**
-
 **_!! This repository is still in progress. Do not use non-audited code for professionnal applications !!_**
