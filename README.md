@@ -1,6 +1,6 @@
 # rust-crypto-wallet
 
-Implementation of a crypto wallet from scratch in rust for the Ethereum chain (actually working)
+Implementation of a crypto wallet in rust for the Ethereum chain
 
 ### Description
 
