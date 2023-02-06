@@ -1,5 +1,6 @@
+use anyhow::Result;
 mod eth_wallet;
-fn main() {
+fn main() -> Result<()> {
     let (secret_key, pub_key) = eth_wallet::generate_keypair();
     println!("secret key: {}", &secret_key.to_string());
     println!("public key: {}", &pub_key.to_string());
@@ -9,4 +10,7 @@ fn main() {
 
     let crypto_wallet = eth_wallet::Wallet::new(&secret_key, &pub_key);
     println!("crypto_wallet: {:?}", &crypto_wallet);
+
+    crypto_wallet.save_to_file("crypto_wallet.json")?;
+    Ok(())
 }

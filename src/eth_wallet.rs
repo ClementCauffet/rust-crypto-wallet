@@ -45,4 +45,14 @@ impl Wallet {
             public_address: format!("{:?}", addr),
         }
     }
+
+    pub fn save_to_file(&self, file_path: &str) -> Result<()> {
+        let file = OpenOptions::new()
+            .write(true)
+            .create(true)
+            .open(file_path)?;
+        let buf_writer = BufWriter::new(file);
+        serde_json::to_writer_pretty(buf_writer, self)?;
+        Ok(())
+    }
 }
