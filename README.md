@@ -5,7 +5,7 @@ Implementation of a crypto wallet from scratch in rust for the Ethereum chain (a
 ### Description
 
 - eth_wallet.rs : implementation of key generation
-- main.rs : control panel
+- main.rs : control panel (printing keys and derivated address)
 
 ### Installation
 
