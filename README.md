@@ -15,4 +15,6 @@ cd rust-crypto-wallet
 cargo run
 ```
 
+Credits : https://tms-dev-blog.com/build-a-crypto-wallet-using-rust/
+
 **_!! This repository is still in progress. Do not use non-audited code for professionnal applications !!_**
