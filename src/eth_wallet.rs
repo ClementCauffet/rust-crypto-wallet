@@ -1,20 +1,38 @@
 //Error handling helper
 use anyhow::{bail, Result};
+use rand::seq::SliceRandom;
+use rand::thread_rng;
+use std::fs::File;
+
 use secp256k1::{
     rand::{rngs, SeedableRng},
     PublicKey, SecretKey,
 };
 //Reading from -Writing to a file
 use serde::{Deserialize, Serialize};
+use std::io::BufRead;
 use std::io::BufWriter;
 use std::str::FromStr;
 use std::{fs::OpenOptions, io::BufReader};
 use tiny_keccak::keccak256;
 use web3::types::Address;
 
+pub fn choose_words(filename: &str) -> Vec<String> {
+    let file = File::open(filename).unwrap();
+    let reader = BufReader::new(file);
+    let mut words: Vec<String> = reader.lines().map(|line| line.unwrap()).collect();
+
+    let mut rng = thread_rng();
+    words.shuffle(&mut rng);
+
+    words.into_iter().take(24).collect()
+}
+
 //key generation (based on the rng variable)
 pub fn generate_keypair() -> (SecretKey, PublicKey) {
     let secp = secp256k1::Secp256k1::new();
+    let chosen_words = choose_words("words.txt");
+    //let mut rng = rngs::StdRng::seed_from_u64(0123);
     let mut rng = rngs::StdRng::seed_from_u64(0123);
     secp.generate_keypair(&mut rng)
 }
