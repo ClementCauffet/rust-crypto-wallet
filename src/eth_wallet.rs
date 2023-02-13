@@ -35,18 +35,19 @@ pub fn generate_keypair() -> (SecretKey, PublicKey) {
     // Initialisation de la bibliothèque secp256k1
     let secp = secp256k1::Secp256k1::new();
     let chosen_words = choose_words("words.txt");
+    println!("Generating 24-words seed phrase :");
     for (index, word) in chosen_words.iter().enumerate() {
         println!("{}: {}", index + 1, word);
     }
-    // Hachage du vecteur de mots pour obtenir un entier à utiliser pour générer la graine aléatoire
+    // Hashing the Vector to use with the seed with the elliptic curve
     let mut hasher = DefaultHasher::new();
     chosen_words.hash(&mut hasher);
     let seed_integer = hasher.finish();
 
-    // Génération de la graine aléatoire à partir de l'entier haché
+    // Seed generation
     let mut rng = rngs::StdRng::seed_from_u64(seed_integer);
 
-    // Génération de la clé à partir de la graine aléatoire
+    // Key genenation
     secp.generate_keypair(&mut rng)
 }
 
