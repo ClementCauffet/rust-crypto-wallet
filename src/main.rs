@@ -1,7 +1,12 @@
 use anyhow::Result;
 mod eth_wallet;
+use std::env;
 
-fn main() -> Result<()> {
+#[tokio::main]
+async fn main() -> Result<()> {
+    //Loading dotenv
+    dotenv::dotenv().ok();
+
     let (seed_phrase, secret_key, pub_key) = eth_wallet::generate_keypair();
 
     println!("24-words generated seed_phrase :");
@@ -22,6 +27,12 @@ fn main() -> Result<()> {
 
     let loaded_wallet = eth_wallet::Wallet::from_file(wallet_file_path)?;
     println!("loaded_wallet: {:?}", loaded_wallet);
+
+    let endpoint = env::var("INFURA_GORLI_WS")?;
+    let web3_con = eth_wallet::establish_web3_connection(&endpoint).await?;
+
+    let block_number = web3_con.eth().block_number().await?;
+    println!("[GORLI] block number: {}", &block_number);
 
     Ok(())
 }

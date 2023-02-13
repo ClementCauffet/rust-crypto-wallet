@@ -4,20 +4,29 @@ use rand::seq::SliceRandom;
 use rand::thread_rng;
 use std::fs::File;
 
+//ellipitc curve
 use secp256k1::{
     rand::{rngs, SeedableRng},
     PublicKey, SecretKey,
 };
+
 //Reading from -Writing to a file
 use serde::{Deserialize, Serialize};
 use std::collections::hash_map::DefaultHasher;
+use std::env;
 use std::hash::{Hash, Hasher};
 use std::io::BufRead;
 use std::io::BufWriter;
-use std::str::FromStr;
 use std::{fs::OpenOptions, io::BufReader};
 use tiny_keccak::keccak256;
-use web3::types::Address;
+use web3::transports::{Http, WebSocket};
+
+//Web3 crate
+use web3::{
+    transports,
+    types::{Address, U256},
+    Web3,
+};
 
 pub fn choose_words(filename: &str) -> Vec<String> {
     let file = File::open(filename).unwrap();
@@ -102,12 +111,18 @@ impl Wallet {
         Ok(wallet)
     }
 
-    pub fn get_secret_key(&self) -> Result<SecretKey> {
-        let secret_key = SecretKey::from_str(&self.secret_key)?;
-        Ok(secret_key)
-    }
-    pub fn get_public_key(&self) -> Result<PublicKey> {
-        let pub_key = PublicKey::from_str(&self.public_key)?;
-        Ok(pub_key)
-    }
+    // pub fn get_secret_key(&self) -> Result<SecretKey> {
+    //     let secret_key = SecretKey::from_str(&self.secret_key)?;
+    //     Ok(secret_key)
+    // }
+    // pub fn get_public_key(&self) -> Result<PublicKey> {
+    //     let pub_key = PublicKey::from_str(&self.public_key)?;
+    //     Ok(pub_key)
+    // }
+}
+
+//connection to websocket
+pub async fn establish_web3_connection(url: &str) -> Result<Web3<WebSocket>> {
+    let transport = transports::WebSocket::new(url).await?;
+    Ok(Web3::new(transport))
 }
