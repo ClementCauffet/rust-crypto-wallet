@@ -1,4 +1,5 @@
 //Error handling helper
+use crate::utils;
 use anyhow::{bail, Result};
 use rand::seq::SliceRandom;
 use rand::thread_rng;
@@ -13,7 +14,6 @@ use secp256k1::{
 //Reading from -Writing to a file
 use serde::{Deserialize, Serialize};
 use std::collections::hash_map::DefaultHasher;
-use std::env;
 use std::hash::{Hash, Hasher};
 use std::io::BufRead;
 use std::io::BufWriter;
@@ -21,10 +21,9 @@ use std::{fs::OpenOptions, io::BufReader};
 use tiny_keccak::keccak256;
 use web3::transports::{Http, WebSocket};
 
-//Web3 crate
 use web3::{
     transports,
-    types::{Address, U256},
+    types::{Address, TransactionParameters, H256, U256},
     Web3,
 };
 
@@ -111,18 +110,59 @@ impl Wallet {
         Ok(wallet)
     }
 
-    // pub fn get_secret_key(&self) -> Result<SecretKey> {
-    //     let secret_key = SecretKey::from_str(&self.secret_key)?;
-    //     Ok(secret_key)
-    // }
+    pub fn get_secret_key(&self) -> Result<SecretKey> {
+        let secret_key = (&self.secret_key).parse().unwrap();
+        Ok(secret_key)
+    }
+
     // pub fn get_public_key(&self) -> Result<PublicKey> {
-    //     let pub_key = PublicKey::from_str(&self.public_key)?;
+    //     let pub_key = (&self.public_key).parse().unwrap();
     //     Ok(pub_key)
     // }
+
+    pub async fn get_balance(&self, web3_connection: &Web3<transports::WebSocket>) -> Result<U256> {
+        let wallet_address = (&self.public_address).parse().unwrap();
+        let balance = web3_connection.eth().balance(wallet_address, None).await?;
+
+        Ok(balance)
+    }
+
+    pub async fn get_balance_in_eth(
+        &self,
+        web3_connection: &Web3<transports::WebSocket>,
+    ) -> Result<f64> {
+        let wei_balance = self.get_balance(web3_connection).await?;
+        Ok(utils::wei_to_eth(wei_balance))
+    }
 }
 
 //connection to websocket
 pub async fn establish_web3_connection(url: &str) -> Result<Web3<WebSocket>> {
     let transport = transports::WebSocket::new(url).await?;
     Ok(Web3::new(transport))
+}
+
+pub fn create_eth_transaction(to: Address, eth_value: f64) -> TransactionParameters {
+    TransactionParameters {
+        to: Some(to),
+        value: utils::eth_to_wei(eth_value),
+        ..Default::default()
+    }
+}
+
+pub async fn sign_and_send(
+    web3: &Web3<transports::WebSocket>,
+    transaction: TransactionParameters,
+    secret_key: &SecretKey,
+) -> Result<H256> {
+    let signed = web3
+        .accounts()
+        .sign_transaction(transaction, secret_key)
+        .await?;
+
+    let transaction_result = web3
+        .eth()
+        .send_raw_transaction(signed.raw_transaction)
+        .await?;
+    Ok(transaction_result)
 }
