@@ -4,6 +4,8 @@
 
 Seed generated using 24 words randomly selected from the "words.txt" file (Ethereum official 2048 words)
 
+**Warning** : "crytpo_wallet.json" contains all SENSITIVE information about your wallet (private key/ seed phrase) - let these for educational purpose but some should remove the comment line from the gitignore if willing to work with this repo
+
 | Functionalities | From Main Menu         |
 | --------------- | ---------------------- |
 | 1               | Create wallet          |
@@ -28,7 +30,7 @@ cargo run
 
 ### Requirements
 
-- [Rust](https://www.rust-lang.org/tools/install) (Might need Visual Studio C++ Build tools)
+- [Rust](https://www.rust-lang.org/tools/install) (**Note** : Might need Visual Studio C++ Build tools)
 
 Credits : https://tms-dev-blog.com/build-a-crypto-wallet-using-rust/
 
