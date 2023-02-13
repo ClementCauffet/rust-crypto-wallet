@@ -31,24 +31,27 @@ pub fn choose_words(filename: &str) -> Vec<String> {
 }
 
 //key generation (based on the rng variable)
-pub fn generate_keypair() -> (SecretKey, PublicKey) {
+pub fn generate_keypair() -> (Vec<String>, SecretKey, PublicKey) {
     // Initialisation de la bibliothèque secp256k1
     let secp = secp256k1::Secp256k1::new();
     let chosen_words = choose_words("words.txt");
-    println!("Generating 24-words seed phrase :");
-    for (index, word) in chosen_words.iter().enumerate() {
-        println!("{}: {}", index + 1, word);
-    }
+
     // Hashing the Vector to use with the seed with the elliptic curve
     let mut hasher = DefaultHasher::new();
+
     chosen_words.hash(&mut hasher);
+
     let seed_integer = hasher.finish();
 
     // Seed generation
     let mut rng = rngs::StdRng::seed_from_u64(seed_integer);
 
     // Key genenation
-    secp.generate_keypair(&mut rng)
+    let (secret_key, public_key) = secp.generate_keypair(&mut rng);
+
+    //let seed_phrase = chosen_words.join(" ");
+
+    (chosen_words, secret_key, public_key)
 }
 
 //derivating public address from public key
@@ -63,15 +66,17 @@ pub fn public_key_address(public_key: &PublicKey) -> Address {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Wallet {
+    pub seed_phrase: Vec<String>,
     pub secret_key: String,
     pub public_key: String,
     pub public_address: String,
 }
 
 impl Wallet {
-    pub fn new(secret_key: &SecretKey, public_key: &PublicKey) -> Self {
+    pub fn new(seed_phrase: &Vec<String>, secret_key: &SecretKey, public_key: &PublicKey) -> Self {
         let addr: Address = public_key_address(&public_key);
         Wallet {
+            seed_phrase: seed_phrase.to_vec(),
             secret_key: secret_key.to_string(),
             public_key: public_key.to_string(),
             public_address: format!("{:?}", addr),
@@ -82,6 +87,7 @@ impl Wallet {
         let file = OpenOptions::new()
             .write(true)
             .create(true)
+            .truncate(true)
             .open(file_path)?;
         let buf_writer = BufWriter::new(file);
         serde_json::to_writer_pretty(buf_writer, self)?;
