@@ -1,6 +1,6 @@
 //Error handling helper
 use crate::utils;
-use anyhow::{bail, Result};
+use anyhow::Result;
 use rand::seq::SliceRandom;
 use rand::thread_rng;
 use std::fs::File;
@@ -19,7 +19,7 @@ use std::io::BufRead;
 use std::io::BufWriter;
 use std::{fs::OpenOptions, io::BufReader};
 use tiny_keccak::keccak256;
-use web3::transports::{Http, WebSocket};
+use web3::transports::WebSocket;
 
 use web3::{
     transports,
@@ -60,6 +60,30 @@ pub fn generate_keypair() -> (Vec<String>, SecretKey, PublicKey) {
     //let seed_phrase = chosen_words.join(" ");
 
     (chosen_words, secret_key, public_key)
+}
+
+//key generation (based on the rng variable)
+pub fn generate_keypair_from_seed(
+    recovery_phrase: Vec<&str>,
+) -> (Vec<String>, SecretKey, PublicKey) {
+    // Initialisation de la bibliothèque secp256k1
+    let secp = secp256k1::Secp256k1::new();
+
+    // Hashing the Vector to use with the seed with the elliptic curve
+    let mut hasher = DefaultHasher::new();
+
+    let vec_string: Vec<String> = recovery_phrase.iter().map(|&s| s.to_string()).collect();
+    vec_string.hash(&mut hasher);
+
+    let seed_integer = hasher.finish();
+
+    // Seed generation
+    let mut rng = rngs::StdRng::seed_from_u64(seed_integer);
+
+    // Key genenation
+    let (secret_key, public_key) = secp.generate_keypair(&mut rng);
+
+    (vec_string, secret_key, public_key)
 }
 
 //derivating public address from public key
@@ -136,7 +160,7 @@ impl Wallet {
     }
 }
 
-//connection to websocket
+//connection to websocket&
 pub async fn establish_web3_connection(url: &str) -> Result<Web3<WebSocket>> {
     let transport = transports::WebSocket::new(url).await?;
     Ok(Web3::new(transport))
@@ -150,6 +174,7 @@ pub fn create_eth_transaction(to: Address, eth_value: f64) -> TransactionParamet
     }
 }
 
+//sending transactions
 pub async fn sign_and_send(
     web3: &Web3<transports::WebSocket>,
     transaction: TransactionParameters,
