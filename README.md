@@ -6,14 +6,14 @@ Seed generated using 24 words randomly selected from the "words.txt" file (Ether
 
 **Warning** : "crytpo_wallet.json" contains all SENSITIVE information about your wallet (private key/ seed phrase) - let these for educational purpose but some should remove the comment line from the gitignore if willing to work with this repo
 
-| Functionalities | From Main Menu         |
-| --------------- | ---------------------- |
-| 1               | Create wallet          |
-| 2               | Display wallet balance |
-| 3               |                        |
-| 4               |                        |
-| 5               |                        |
-| 6               |                        |
+| Functionalities | From Main Menu                    |
+| --------------- | --------------------------------- |
+| 1               | Create wallet                     |
+| 2               | Load a wallet using your 24-words |
+| 3               | Display wallet balance            |
+| 4               | Display wallet info               |
+| 5               | Send ETH                          |
+| 6               | Quit                              |
 
 ### Description
 
@@ -25,6 +25,7 @@ Seed generated using 24 words randomly selected from the "words.txt" file (Ether
 ```
 git clone https://github.com/ClementCauffet/rust-crypto-wallet.git
 cd rust-crypto-wallet
+#Create a .env file with YOUR API KEY (you can refer to the .env_example file)
 cargo run
 ```
 
