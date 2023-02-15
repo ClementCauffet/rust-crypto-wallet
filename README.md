@@ -22,7 +22,7 @@ Seed generated using 24 words randomly selected from the "words.txt" file (Ether
 
 ### Installation
 
-```
+```bash
 git clone https://github.com/ClementCauffet/rust-crypto-wallet.git
 cd rust-crypto-wallet
 #Create a .env file with YOUR API KEY (you can refer to the .env_example file)
