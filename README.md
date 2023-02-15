@@ -19,6 +19,13 @@ Seed generated using 24 words randomly selected from the "words.txt" file (Ether
 
 - eth_wallet.rs : implementation of key generation
 - main.rs : control panel (printing keys and derivated address)
+- utils.rs : mathematical functions
+- crypto_wallet.json : contains all data regarding current wallet
+
+### Requirements
+
+- Install [Rust](https://www.rust-lang.org/tools/install) (**Note** : Might need Visual Studio C++ Build tools)
+- API KEY for Ethereum Testnet (personnaly chose to use Infura WebSocket for Goerli but you could use your own RPC)
 
 ### Installation
 
@@ -28,11 +35,6 @@ cd rust-crypto-wallet
 #Create a .env file with YOUR API KEY (you can refer to the .env_example file)
 cargo run
 ```
-
-### Requirements
-
-- [Rust](https://www.rust-lang.org/tools/install) (**Note** : Might need Visual Studio C++ Build tools)
-- API KEY for Ethereum Testnet (personnaly chose to use Infura WebSocket for Goerli but you could use your own RPC)
 
 Credits : https://tms-dev-blog.com/build-a-crypto-wallet-using-rust/
 
