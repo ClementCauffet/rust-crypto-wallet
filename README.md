@@ -1,12 +1,12 @@
 # rust-crypto-wallet
 
-## _Implementation of a crypto wallet in rust for the Ethereum chain_
+## _Implementation of a crypto wallet in rust for the Ethereum chain (Goerli)_
 
 Seed generated using 24 words randomly selected from the "words.txt" file (Ethereum official 2048 words)
 
 **Warning** : "crytpo_wallet.json" contains all SENSITIVE information about your wallet (private key/ seed phrase) - let these for educational purpose but some should remove the comment line from the gitignore if willing to work with this repo
 
-| Functionalities | From Main Menu                    |
+| Functionalities | From Main Menu (main.rs)          |
 | --------------- | --------------------------------- |
 | 1               | Create wallet                     |
 | 2               | Load a wallet using your 24-words |
@@ -32,7 +32,8 @@ cargo run
 ### Requirements
 
 - [Rust](https://www.rust-lang.org/tools/install) (**Note** : Might need Visual Studio C++ Build tools)
+- API KEY for Ethereum Testnet (personnaly chose to use Infura WebSocket for Goerli but you could use your own RPC)
 
-Credits : https://tms-dev-blog.com/build-a-crypto-wallet-using-rust/
+Credits : -https://tms-dev-blog.com/build-a-crypto-wallet-using-rust/
 
-**_!! This repository is still in progress. Do not use non-audited code for professionnal applications !!_**
+**_!! This repository is still in progress. Do not use non-audited code for professionnal applications. Author won't be responsible for any fund loss !!_**

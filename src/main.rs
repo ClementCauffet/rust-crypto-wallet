@@ -64,7 +64,7 @@ async fn main() -> Result<()> {
                 Err(e) => println!("Error retrieving balance: {:?}", e),
             },
             4 => match get_wallet_info(wallet_file_path).await {
-                Ok(_) => println!("\nSuccessfully found balance for current adress !"),
+                Ok(_) => println!("\nSuccessfully found info for current wallet !"),
                 Err(e) => println!("Error retrieving balance: {:?}", e),
             },
 
@@ -145,7 +145,7 @@ async fn main() -> Result<()> {
     }
     async fn get_wallet_info(wallet_file_path: &str) -> Result<(), Box<dyn std::error::Error>> {
         let loaded_wallet = eth_wallet::Wallet::from_file(wallet_file_path)?;
-        println!("Wallet 24-words : {:?} ", loaded_wallet.seed_phrase);
+        println!("\nWallet 24-words : {:?} ", loaded_wallet.seed_phrase);
         println!("Wallet secret key : {} ", loaded_wallet.secret_key);
         println!("Wallet public key : {} ", loaded_wallet.public_key);
         println!("Wallet public address : {} ", loaded_wallet.public_address);
@@ -168,7 +168,8 @@ async fn main() -> Result<()> {
         io::stdin()
             .read_line(&mut amount_str)
             .expect("Error while reading address");
-        // Convertit le montant en type f64
+
+        // Parse to f64S
         let amount: f64 = amount_str.trim().parse().expect("Invalid amount");
 
         let loaded_wallet = eth_wallet::Wallet::from_file(wallet_file_path)?;
@@ -181,7 +182,6 @@ async fn main() -> Result<()> {
             let transaction =
                 eth_wallet::create_eth_transaction(Address::from_str(&address)?, amount);
 
-            //Address::from_str("---- Any Wallet you want to send funds to (0x) ---- ")?,
             let transact_hash =
                 eth_wallet::sign_and_send(&web3_con, transaction, &loaded_wallet.get_secret_key()?)
                     .await?;
