@@ -34,6 +34,6 @@ cargo run
 - [Rust](https://www.rust-lang.org/tools/install) (**Note** : Might need Visual Studio C++ Build tools)
 - API KEY for Ethereum Testnet (personnaly chose to use Infura WebSocket for Goerli but you could use your own RPC)
 
-Credits : -https://tms-dev-blog.com/build-a-crypto-wallet-using-rust/
+Credits : https://tms-dev-blog.com/build-a-crypto-wallet-using-rust/
 
 **_!! This repository is still in progress. Do not use non-audited code for professionnal applications. Author won't be responsible for any fund loss !!_**
