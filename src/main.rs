@@ -4,9 +4,8 @@ mod utils;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::env;
-use std::fs::File;
+
 use std::io;
-use std::io::Read;
 
 use std::str::FromStr;
 use web3::types::Address;
@@ -212,6 +211,7 @@ struct WalletData {
 //Tests
 #[cfg(test)]
 mod test {
+
     use super::*;
 
     #[test]
@@ -221,30 +221,44 @@ mod test {
         // Call the function being tested
         create_wallet(wallet_file_path);
 
-        // Check that the wallet file was created
-        let wallet_file = File::open(wallet_file_path);
+        // Check that the wallet file was created-6
+        let wallet_file = std::fs::File::open(wallet_file_path);
         assert!(wallet_file.is_ok(), "Wallet file was not created");
 
-        let mut file = File::open(wallet_file_path).unwrap();
-        let mut contents = String::new();
-        file.read_to_string(&mut contents).unwrap();
+        // Check if the wallet file was created
+        let file = std::fs::File::open(&wallet_file_path);
+        assert!(file.is_ok(), "Wallet file not created");
 
-        // Deserialize wallet data into a WalletData strut type
-        let my_data: WalletData = serde_json::from_str(&contents).unwrap();
+        // Check if the wallet file has the correct content
+        let wallet_json: serde_json::Value =
+            serde_json::from_reader(file.unwrap()).expect("Failed to parse wallet file");
 
-        // Check if fields have the same length as expected (adress / keys must have the same format all the time -> this test will fail if user input a 12 words seed_phrase but we spectified 24)
-        let num_seed_phrases = my_data.seed_phrase.len();
-        let num_secret_key_chars = my_data.secret_key.len();
-        let num_public_key_chars = my_data.public_key.len();
-        let num_public_address_chars = my_data.public_address.len();
+        assert_eq!(
+            wallet_json["seed_phrase"].as_array().unwrap().len(),
+            24,
+            "Invalid seed phrase length"
+        );
 
-        assert_eq!(num_seed_phrases, 24);
-        assert_eq!(num_secret_key_chars, 64);
-        assert_eq!(num_public_key_chars, 66);
-        assert_eq!(num_public_address_chars, 42);
+        assert_eq!(
+            wallet_json["secret_key"].as_str().unwrap().len(),
+            64,
+            "Invalid secret key length"
+        );
 
-        // Clean up test file
-        std::fs::remove_file(wallet_file_path).unwrap();
+        assert_eq!(
+            wallet_json["public_key"].as_str().unwrap().len(),
+            66,
+            "Invalid public key length"
+        );
+
+        assert_eq!(
+            wallet_json["public_address"].as_str().unwrap().len(),
+            42,
+            "Invalid public address length"
+        );
+
+        // Delete the temporary file
+        std::fs::remove_file(&wallet_file_path).unwrap();
     }
 
     #[test]

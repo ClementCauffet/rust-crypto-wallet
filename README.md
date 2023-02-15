@@ -4,6 +4,8 @@
 
 Seed generated using 24 words randomly selected from the "words.txt" file (Ethereum official 2048 words)
 
+![Workflow](https://github.com/ClementCauffet/rust-crypto-wallet/actions/workflows/rust.yml/badge.svg)
+
 **Warning** : "crytpo_wallet.json" contains all SENSITIVE information about your wallet (private key/ seed phrase) - let these for educational purpose but some should remove the comment line from the gitignore if willing to work with this repo
 
 | Functionalities | From Main Menu (main.rs)          |
